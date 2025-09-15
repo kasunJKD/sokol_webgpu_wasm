@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden; /* prevent scrollbars */
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script src="index.js"></script>
+  <script>
+    Module.onRuntimeInitialized = () => {
+      const canvas = document.getElementById("canvas");
+
+      function assignWindowSize() {
+        const w = window.innerWidth;   // use innerWidth for usable space
+        const h = window.innerHeight;
+
+        // 1. Resize the canvas element
+        canvas.width = w;
+        canvas.height = h;
+
+        // 2. Tell WASM about it
+        Module._setResolution(w, h);
+
+        console.log("Canvas + WASM set to:", w, h);
+      }
+
+      assignWindowSize();              // initial setup
+    };
+  </script>
+</body>
+</html>

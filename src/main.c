@@ -1,3 +1,4 @@
+#include <emscripten.h>
 #include <stdbool.h>
 
 #define SOKOL_IMPL
@@ -7,10 +8,16 @@
 #include "sokol_log.h"
 #include "sokol_glue.h"
 
-#define WIDTH 800
-#define HEIGHT 600
-
 sg_pass_action pass_action;
+
+int width = 640;
+int heigth = 320;
+
+EMSCRIPTEN_KEEPALIVE
+void setResolution(int w, int h) {
+    width = w;
+    heigth = h;
+}
 
 static void init(void) {
     sg_setup(&(sg_desc){
@@ -44,10 +51,12 @@ sapp_desc sokol_main(int argc, char* argv[]) {
         .init_cb = init,
         .frame_cb = frame,
         .cleanup_cb = cleanup,
-        .width = 400,
-        .height = 300,
+        .width = width,
+        .height = heigth,
         .window_title = "Clear (sokol app)",
         .icon.sokol_default = true,
-        .logger.func = slog_func,
+        .html5_canvas_resize = true,
+        .html5_canvas_selector = "#canvas",
+        .high_dpi = false 
     };
 }

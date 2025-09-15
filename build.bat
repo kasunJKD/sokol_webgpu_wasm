@@ -117,9 +117,8 @@ if /I "%TARGET%"=="web" (
   set "INCLUDES=-I%VENDOR_DIR_SOKOL% -I%VENDOR_DIR% -std=c11"
 
   echo [*] Building Web (WASM)...
-  emcc %SRC_LIST% %INCLUDES% ^
-    --use-port=emdawnwebgpu -sALLOW_MEMORY_GROWTH=1 -sASSERTIONS=1 -sWASM=1 ^
-    -o "%BUILD_WEB%\index.html"
+  emcc %SRC_LIST% %INCLUDES% -sEXPORTED_FUNCTIONS="['_setResolution', '_main']" -o index.js^
+    --use-port=emdawnwebgpu -sALLOW_MEMORY_GROWTH=1 -sASSERTIONS=1 -sWASM=1
   if errorlevel 1 ( echo [x] Web build failed. & exit /b 1 )
 
   echo [✓] Done.
