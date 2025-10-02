@@ -73,39 +73,21 @@ if not defined HAVE_SRC (
 )
 
 REM REM ===== Native Windows build =====
-REM if /I "%TARGET%"=="native" (
-REM   if defined HAVE_CLANGCL (
-REM     echo [i] Using clang-cl (MSVC-style)
-REM     set "INCLUDES=/I %VENDOR_DIR_SOKOL% /I %VENDOR_DIR% /I %VENDOR_DIR_WEBGPU%"
-REM     set "LIBS=user32.lib gdi32.lib shell32.lib kernel32.lib winmm.lib d3d11.lib opengl32.lib"
-REM
-REM     echo [*] Building Debug...
-REM     clang-cl /nologo %INCLUDES% /Zi /Od /DDEBUG %SRC_LIST% %LIBS% ^
-REM       /link /LIBPATH:%VENDOR_DIR_WEBGPU%\lib ^
-REM       /out:%BUILD_DEBUG%\%APP_NAME%.exe
-REM     if errorlevel 1 ( echo [x] Debug build failed. & exit /b 1 )
-REM
-REM     echo [✓] Done.
-REM     echo     Debug : "%BUILD_DEBUG%\%APP_NAME%.exe"
-REM     exit /b 0
-REM   )
-REM
-REM   if defined HAVE_CLANG (
-REM     echo [i] Using clang (POSIX-style)
-REM     set "INCLUDES=-I%VENDOR_DIR_SOKOL% -I%VENDOR_DIR% -I%VENDOR_DIR_WEBGPU% -std=c11 -Wall -Wextra -Wno-unused-parameter"
-REM     set "LIBS=-luser32 -lgdi32 -lshell32 -lkernel32 -lwinmm -ld3d11 -lopengl32"
-REM
-REM     echo [*] Building Debug...
-REM     clang %INCLUDES% -g -O0 -DDEBUG %SRC_LIST% %LIBS% ^
-REM       -L%VENDOR_DIR_WEBGPU%/lib ^
-REM       -o "%BUILD_DEBUG%\%APP_NAME%.exe"
-REM     if errorlevel 1 ( echo [x] Debug build failed. & exit /b 1 )
-REM
-REM     echo [✓] Done.
-REM     echo     Debug : "%BUILD_DEBUG%\%APP_NAME%.exe"
-REM     exit /b 0
-REM   )
-REM )
+
+if defined HAVE_CLANGCL (
+echo [i] Using clang-cl (MSVC-style)
+set INCLUDES=/I%VENDOR_DIR_SOKOL% /I%VENDOR_DIR% /I%VENDOR_DIR_WEBGPU%
+set LIBS=user32.lib gdi32.lib shell32.lib kernel32.lib winmm.lib opengl32.lib
+
+echo [*] Building Debug...
+clang-cl /nologo %INCLUDES% /Zi /Od /DDEBUG /DSOKOL_GLCORE33 %SRC_LIST% %LIBS% ^
+/link /out:%BUILD_DEBUG%\%APP_NAME%.exe
+if errorlevel 1 ( echo [x] Debug build failed. & exit /b 1 )
+
+echo [✓] Done.
+echo     Debug : "%BUILD_DEBUG%\%APP_NAME%.exe"
+exit /b 0
+ )
 
 REM ===== Web (Emscripten) build =====
 if /I "%TARGET%"=="web" (

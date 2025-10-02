@@ -1,23 +1,44 @@
-#include <emscripten.h>
+/**
+*
+* TODO
+* draw_group => will call render_group
+* render and test in sokol
+*
+*
+* */
+
+
 #include <stdbool.h>
 
+#ifdef __EMSCRIPTEN__
 #define SOKOL_IMPL
 #define SOKOL_WGPU
+#else
+#define SOKOL_IMPL
+#define SOKOL_GLCORE
+#endif
+
 #include "sokol_gfx.h"
 #include "sokol_app.h"
 #include "sokol_log.h"
 #include "sokol_glue.h"
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 sg_pass_action pass_action;
 
 int width = 640;
-int heigth = 320;
+int height = 320;
 
+#ifdef __EMSCRIPTEN__
 EMSCRIPTEN_KEEPALIVE
 void setResolution(int w, int h) {
     width = w;
-    heigth = h;
+    height = h;
 }
+#endif
 
 static void init(void) {
     sg_setup(&(sg_desc){
@@ -44,19 +65,33 @@ static void cleanup(void) {
     sg_shutdown();
 }
 
-sapp_desc sokol_main(int argc, char* argv[]) {
+sapp_desc sokol_main(int argc, char *argv[]) {
     (void)argc;
     (void)argv;
+
+#ifdef __EMSCRIPTEN__
+    // Web mode
+    return (sapp_desc){
+        .init_cb = init,
+        .frame_cb = frame,
+        .cleanup_cb = cleanup,
+        .window_title = "Clear (sokol app)",
+        .icon.sokol_default = true,
+        .html5_canvas_resize = true,        // let browser drive size
+        .html5_canvas_selector = "#canvas", // match your HTML <canvas id="canvas">
+        .high_dpi = false,
+    };
+#else
+    // Native desktop mode
     return (sapp_desc){
         .init_cb = init,
         .frame_cb = frame,
         .cleanup_cb = cleanup,
         .width = width,
-        .height = heigth,
+        .height = height,
         .window_title = "Clear (sokol app)",
         .icon.sokol_default = true,
-        .html5_canvas_resize = true,
-        .html5_canvas_selector = "#canvas",
-        .high_dpi = false 
+        .high_dpi = false,
     };
+#endif
 }
