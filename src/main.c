@@ -1,7 +1,8 @@
 /**
 *
 * TODO
-* draw_group => will call render_group
+* add state to main
+* add arena and initialise renderers
 * render and test in sokol
 *
 *
@@ -27,7 +28,6 @@
 #include <emscripten.h>
 #endif
 
-sg_pass_action pass_action;
 
 int width = 640;
 int height = 320;
@@ -39,6 +39,9 @@ void setResolution(int w, int h) {
     height = h;
 }
 #endif
+
+typedef struct { 
+} State;
 
 static void init(void) {
     sg_setup(&(sg_desc){

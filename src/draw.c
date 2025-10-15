@@ -8,3 +8,7 @@ void draw_quad(EntityManager* em, RenderGroup* group,
     // high-level API -> just forwards to renderer
     PushQuad(em, group, position, name, size, color);
 }
+
+void draw_update(RenderSystem *system) {
+    render_update(system);
+}

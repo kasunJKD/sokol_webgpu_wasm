@@ -18,6 +18,7 @@
 #include "defines.h"
 
 #define MAX_ENTITIES 2024
+#define MAX_GROUPS 10 
 
 typedef enum {
 	CIRCLE,

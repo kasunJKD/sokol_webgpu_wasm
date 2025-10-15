@@ -7,4 +7,7 @@
 void draw_quad(EntityManager* em, RenderGroup* group,
                Vec3 position, Vec2 size, Color color, const char* name);
 
+
+
+void draw_update(RenderSystem *system);
 #endif // DRAW_H
