@@ -1,6 +1,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include "defines.h"
 #include "entity.h"
 
 typedef struct{
@@ -17,5 +18,7 @@ EntityHeader* PushQuad(EntityManager *em, RenderGroup* group, Vec3 worldPosition
 
 
 void render_update(RenderSystem* system);
+
+RenderSystem* create_render_system(Arena* arena);
 
 #endif //RENDERER_H

@@ -28,6 +28,9 @@
 #include <emscripten.h>
 #endif
 
+#include "entity.h"
+#include "renderer.h"
+#include "defines.h"
 
 int width = 640;
 int height = 320;
@@ -40,10 +43,31 @@ void setResolution(int w, int h) {
 }
 #endif
 
+//temp delete this later
+sg_pass_action pass_action;
+
 typedef struct { 
+    Arena* permanent_storage;
+    RenderSystem* render_system;
+    EntityManager* entity_manager;
 } State;
 
+static State g_state = {0};
+
+void init_state(State *state){
+    static uint8_t perm_memory[MB(128)];
+    Arena permanent = create_arena(perm_memory, sizeof(perm_memory));
+    g_state.permanent_storage = &permanent;
+    
+    RenderSystem* render_sys = create_render_system(state->permanent_storage);
+    EntityManager* ent_manager = create_entity_manager(state->permanent_storage);
+
+    g_state.render_system = render_sys;
+    g_state.entity_manager = ent_manager;
+}
+
 static void init(void) {
+    init_state(&g_state);
     sg_setup(&(sg_desc){
         .environment = sglue_environment(),
         .logger.func = slog_func,

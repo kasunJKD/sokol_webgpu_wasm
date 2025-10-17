@@ -7,10 +7,13 @@
 #include "sokol_gfx.h"
 #include "sokol_glue.h" 
 
-RenderSystem create_render_system() {
-   RenderSystem s = {0};
-   s.count = 0;
-   return s;
+RenderSystem* create_render_system(Arena* arena) {
+    // Allocate persistent space for the system inside the arena
+    RenderSystem* s = ArenaPushZeroStruct(arena, RenderSystem);
+    if (!s) return NULL;  // out of memory
+    s->count = 0;
+
+    return s;
 }
 
 RenderGroup create_render_group(RenderSystem* system) {

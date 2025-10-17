@@ -57,4 +57,6 @@ typedef struct {
 
 ET_QUAD* create_entity_quad(EntityManager* em, const char* name, Vec3 position, Vec2 size, Color color);
 
+EntityManager* create_entity_manager(Arena* arena_);
+
 #endif //ENTITIY_H
